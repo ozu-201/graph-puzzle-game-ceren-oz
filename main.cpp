@@ -8,7 +8,7 @@ int main(){
     std::vector<std::string> dictionary3;
     std::vector<std::string> dictionary4;
     std::vector<std::string> dictionary5;
-    std::ifstream file("C:\\Users\\TEMP\\Downloads\\wordstest.txt");
+    std::ifstream file("C:\\Users\\TEMP.OZUN\\Downloads\\wordtest.txt");
     std::string line;
     if(file.is_open()){
         while (getline(file,line)){
@@ -27,13 +27,18 @@ int main(){
 
 
 
-    Graph graph3= Graph( dictionary3.size());
-    graph3.createGraph(dictionary3);
+    /*Graph graph3= Graph( dictionary3.size());
+    graph3.createGraph(dictionary3);*/
 
-    Graph graph4= Graph( dictionary4.size());
+    Graph graph4=  Graph( dictionary4.size());
     graph4.createGraph(dictionary4);
+    std::vector<std::string> words =graph4.breadthFirstSearch("polo","tall");
 
-    Graph graph5= Graph(dictionary5.size());
+    for(const auto & word : words){
+        std::cout << word;
+    }
+
+    /*Graph graph5= Graph(dictionary5.size());
     graph5.createGraph(dictionary5);
 
     std::cout << "enter number of letters: ";
@@ -46,7 +51,7 @@ int main(){
 
     std::cout << "enter the last word: ";
     std::string lastWord;
-    std::cin >> lastWord;
+    std::cin >> lastWord;*/
 
     return 0;
 }

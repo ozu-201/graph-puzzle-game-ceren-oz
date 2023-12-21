@@ -2,6 +2,7 @@
 #include "Edge.h"
 
 class EdgeList {
+public:
         Edge* head;
         Edge* tail;
      public:
