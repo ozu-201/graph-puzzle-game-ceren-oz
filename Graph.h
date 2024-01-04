@@ -1,5 +1,9 @@
 #include <string>
 #include <vector>
+#include <iostream>
+#include <limits>
+#include <algorithm>
+#include <queue>
 #include "EdgeList.h"
 #include "Queue.h"
 
@@ -24,11 +28,11 @@ public:
                 break;
             }
             for(int j=i+1; j<words.size(); j++){
-                std::string word2=words[i];
+                std::string word2=words[j];
                 if(isOneLetterApart(word1,word2)){
                     Edge *edge1=new Edge(word1,word2);
-                    edges[i].insert(edge1);
                     Edge *edge2=new Edge(word2,word1);
+                    edges[i].insert(edge1);
                     edges[j].insert(edge2);
                 }
             }
@@ -106,4 +110,65 @@ public:
         }
         return words;
     }
+    std::vector<std::string> dijkstra(std::string startNode, std::string endNode){
+
+        std::vector<bool> visited(vertexCount, false);
+        std::vector<int> distance(vertexCount,std::numeric_limits<int>::max());
+        std::vector<int> predecessor(vertexCount,-1);
+        std::vector<std::string> path;
+
+        int val= getNodeIndex(startNode);
+        distance[val]=0;
+
+        std::priority_queue<std::pair<int,std::string>,std::vector<std::pair<int,std::string>>, std::greater<std::pair<int,std::string>>> pq;
+        pq.push({0,startNode});
+
+        while(!pq.empty()){
+            std::string currentNode=pq.top().second;
+            pq.pop();
+
+            int currentNodeIndex= getNodeIndex(currentNode);
+            if(visited[currentNodeIndex]) continue;
+            visited[currentNodeIndex]= true;
+
+           Edge* edge=edges[currentNodeIndex].head;
+           while(edge!= nullptr){
+               std::string neighborNode=edge->to;
+               int neighborIndex= getNodeIndex(neighborNode);
+
+               if(!visited[neighborIndex]){
+                   int newDistance=distance[currentNodeIndex]+edge->weight;
+                   if(newDistance<distance[neighborIndex]){
+                       distance[neighborIndex]=newDistance;
+                       predecessor[neighborIndex]=currentNodeIndex;
+                       pq.push({newDistance,neighborNode});
+                   }
+               }
+               edge=edge->next;
+           }
+        }
+        int currentNodeIndex= getNodeIndex(endNode);
+        while(currentNodeIndex!=-1){
+            path.push_back(edges[currentNodeIndex].head->from);
+            currentNodeIndex=predecessor[currentNodeIndex];
+        }
+        std::reverse(path.begin(),path.end());
+        return path;
+    }
+
+
+private:
+   int getNodeIndex(std::string node){
+        for(int i=0; i<edges.size(); ++i){
+            if(edges[i].head== nullptr){
+                continue;
+            }
+            if (edges[i].head->from==node){
+                return i;
+            }
+        }
+       return -1;
+    }
+
+
 };
